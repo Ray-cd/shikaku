@@ -6,7 +6,7 @@ import (
 )
 
 var rootCmd = &cobra.Command{
-	Use:   "branch_checker",
+	Use:   "shikaku",
 	Short: "A tool to check code changes in a branch and validate coding principles",
 }
 

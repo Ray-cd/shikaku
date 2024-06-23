@@ -11,7 +11,7 @@ import (
 )
 
 var compareCmd = &cobra.Command{
-	Use:   "compare",
+	Use:   "compare [a1] [a2] [a3] [a4]",
 	Short: "Compare branch with master and check coding principles",
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) < 2 {

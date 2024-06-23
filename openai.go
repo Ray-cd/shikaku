@@ -41,7 +41,12 @@ func checkCodingPrinciples(code string) {
 	defer resp.Body.Close()
 	body, _ := ioutil.ReadAll(resp.Body)
 	var gptResp GPT3Response
-	json.Unmarshal(body, &gptResp)
+	err = json.Unmarshal(body, &gptResp)
+	if err != nil {
+		fmt.Println("Error reading request to OpenAI:", err)
+		return
+	}
+	fmt.Println(gptResp.Choices)
 	if len(gptResp.Choices) > 0 {
 		fmt.Println("GPT-3 Analysis and Suggestions:")
 		fmt.Println(gptResp.Choices[0].Text)
