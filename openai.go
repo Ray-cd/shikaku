@@ -10,10 +10,16 @@ import (
 )
 
 type GPT3Request struct {
-	Prompt    string `json:"prompt"`
-	MaxTokens int    `json:"max_tokens"`
-	Model     string `json:"model"`
+	Messages  []GPTMessage `json:"messages"`
+	MaxTokens int          `json:"max_tokens"`
+	Model     string       `json:"model"`
 }
+
+type GPTMessage struct {
+	Role    string `json:"role"`
+	Content string `json:"content"`
+}
+
 type GPT3Response struct {
 	Choices []struct {
 		Text string `json:"text"`
@@ -22,13 +28,15 @@ type GPT3Response struct {
 
 func checkCodingPrinciples(code string) {
 	apiKey := os.Getenv("OPENAI_API_KEY")
-	prompt := fmt.Sprintf("Check the following code for basic coding principles and suggest improvements:\n\n%s", code)
+	message := GPTMessage{Role: "system", Content: fmt.Sprintf("Check the following code for basic coding principles and suggest improvements:")}
+	userMessage := GPTMessage{Role: "user", Content: code}
 	reqBody := GPT3Request{
-		Prompt:    prompt,
-		MaxTokens: 150,
-		Model:     "text-davinci-003",
+		Messages:  []GPTMessage{message, userMessage},
+		MaxTokens: 1500,
+		Model:     "gpt-3.5-turbo",
 	}
 	reqBodyJson, _ := json.Marshal(reqBody)
+	fmt.Println(string(reqBodyJson))
 	req, _ := http.NewRequest("POST", "https://api.openai.com/v1/completions", bytes.NewBuffer(reqBodyJson))
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Authorization", "Bearer "+apiKey)
